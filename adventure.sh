@@ -12,6 +12,12 @@ set -u
 
 declare -r SCRIPT_PATH="$0"
 
+# Detect piped execution: script file doesn't exist and stdin is not a terminal
+declare -i PIPED_EXECUTION=0
+if [[ ! -f "$SCRIPT_PATH" ]] && ! [[ -t 0 ]]; then
+    PIPED_EXECUTION=1
+fi
+
 declare -r TRUE=0
 declare -r FALSE=1
 
@@ -1529,10 +1535,19 @@ function getin() {
 
     GETIN_EOF=$FALSE
     while true; do
-        if ! read -r -p "> " line; then
-            GETIN_EOF=$TRUE
-            WORD1="" WORD1X="" WORD2="" WORD2X=""
-            return
+        # In piped mode, read from /dev/tty (user's keyboard); otherwise read from stdin
+        if (( PIPED_EXECUTION )); then
+            if ! read -r -p "> " line </dev/tty; then
+                GETIN_EOF=$TRUE
+                WORD1="" WORD1X="" WORD2="" WORD2X=""
+                return
+            fi
+        else
+            if ! read -r -p "> " line; then
+                GETIN_EOF=$TRUE
+                WORD1="" WORD1X="" WORD2="" WORD2X=""
+                return
+            fi
         fi
         line=$(echo "$line" | tr '[:lower:]' '[:upper:]')
         w1="" w2=""
