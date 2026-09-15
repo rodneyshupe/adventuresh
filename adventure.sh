@@ -10,6 +10,8 @@ declare -r ABOUT="A pure-Bash port of Colossal Cave Adventure (1977): play the C
 
 set -u
 
+declare -r SCRIPT_PATH="$0"
+
 declare -r TRUE=0
 declare -r FALSE=1
 
@@ -639,8 +641,15 @@ function load_message_line() {
 }
 
 function load_data() {
-    local file="${1:-$0}"
-    echo "Loading game data from $file..."
+    local file="${1:-$SCRIPT_PATH}"
+    local source_desc="$file"
+
+    # If file doesn't exist and we're trying to read the script, use stdin instead (for piped execution)
+    if [[ ! -f "$file" ]] && [[ "$file" == "$SCRIPT_PATH" ]]; then
+        source_desc="stdin"
+    fi
+
+    echo "Loading game data from $source_desc..."
     local section=-1
     local id text
     local in_data=0
@@ -662,7 +671,7 @@ function load_data() {
     RAW_MAGIC=()
 
     # If reading from an external file (not the script itself), don't scan for DATA_START
-    if [[ "$file" != "$0" ]]; then
+    if [[ "$file" != "$SCRIPT_PATH" ]]; then
         in_data=1
     fi
 
@@ -4180,7 +4189,7 @@ EOF
 }
 
 function main() {
-    local data_file="$0"
+    local data_file="$SCRIPT_PATH"
 
     # --crowther selects the trimmed Crowther-compat dataset and enables
     # CROWTHER_MODE to gate pirate/closing logic. Must set both.
@@ -4312,10 +4321,12 @@ function main() {
     play_game
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    parse_arguments "$@"
-    main "$@"
+if (( ${#BASH_SOURCE[@]} > 1 )); then
+    return
 fi
+
+parse_arguments "$@"
+main "$@"
 
 exit 0
 DATA_START
