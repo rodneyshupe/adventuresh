@@ -675,7 +675,14 @@ function load_data() {
         in_data=1
     fi
 
-    while IFS= read -r line; do
+    # Open file or use stdin via file descriptor
+    if [[ -f "$file" ]]; then
+        exec 3< "$file"
+    else
+        exec 3<&0
+    fi
+
+    while IFS= read -r -u 3 line; do
         if (( in_data == 0 )); then
             [[ "$line" == "DATA_START" ]] && in_data=1
             continue
@@ -735,7 +742,11 @@ function load_data() {
         elif (( section == 12 )); then
             load_message_line RAW_MAGIC
         fi
-    done < "$file"
+    done
+
+    # Close the file descriptor
+    exec 3<&-
+
     echo "Data loaded."
 }
 
