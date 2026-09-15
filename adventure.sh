@@ -993,8 +993,8 @@ function datime() {
         DATIME_T=$t
     else
         DATIME_D=$(( $(date +%s) / 86400 ))
-        local -i hours=$(date +%H)
-        local -i minutes=$(date +%M)
+        local -i hours=10#$(date +%H)
+        local -i minutes=10#$(date +%M)
         DATIME_T=$(( hours * 60 + minutes ))
     fi
 }
