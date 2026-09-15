@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Bash development
+*.bak
+*.backup
+*.tmp
+*.temp
+*.log
+tags
+.bash_history
+
+# IDE and editors
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific
+Thumbs.db
+.env.local
+
+# Node (if using node tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python (if using Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
