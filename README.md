@@ -115,5 +115,4 @@ The cave is nonlinear and full of dead ends, mazes, and tricky puzzles. Some ite
 - **Don Woods** for expanding the original Adventure.
 - **Dennis Jerz** for recovering Crowther's original pre-Woods source from a backup of Don Woods' student account.
 - **Alan H. Martin** for providing the 350-point PDP-10 source from a rescued copy of the LINK-10 regression test system.
-- **Linards Ticmanis** for the DECUS Maintenance Release 4 FORTRAN 77 re-typing kept under `src/advent4/` as a secondary reference.
 - This **Bash port** is a structural translation of the original Fortran sources into shell scripting.
